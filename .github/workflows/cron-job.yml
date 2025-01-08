@@ -1,0 +1,15 @@
+name: Send Booking Confirmation Email
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Every 15 minutes
+
+jobs:
+  booking-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger booking confirmation endpoint
+        run: |
+          curl -X POST https://your-vercel-project.vercel.app/api/book-table \
+          -H "Content-Type: application/json" \
+          -d '{"tableName": "T-01", "reservedAt": "2025-01-07 13:45", "customerName": "John", "customerSurname": "Doe", "customerEmail": "john.doe@example.com"}'
