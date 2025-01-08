@@ -2,10 +2,10 @@ const nodemailer = require("nodemailer");
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: "Yahoo",
   auth: {
-    user: process.env.GMAIL_USER, // Use environment variables for security
-    pass: process.env.GMAIL_APP_PASSWORD,
+    user: process.env.YAHOO_USER, 
+    pass: process.env.YAHOO_APP_PASSWORD,
   },
 });
 
@@ -34,4 +34,6 @@ export default async function handler(req, res) {
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
+
+
 }

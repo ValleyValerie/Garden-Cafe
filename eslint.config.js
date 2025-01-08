@@ -17,12 +17,12 @@ export default [
 
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
-  
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
-  
+
   {
     ...pluginCypress.configs.recommended,
     files: [
@@ -31,4 +31,13 @@ export default [
     ],
   },
   skipFormatting,
+  {
+    env: {
+      node: true,  // Enables Node.js environment
+    },
+    globals: {
+      require: 'readonly',  // Mark require as a global
+      process: 'readonly',  // Mark process as a global
+    },
+  }
 ]

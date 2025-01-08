@@ -1,17 +1,17 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: "Yahoo",
   auth: {
-    user: process.env.GMAIL_USER, // Your Gmail address
-    pass: process.env.GMAIL_APP_PASSWORD, // App password
+    user: process.env.YAHOO_USER,
+    pass: process.env.YAHOO_APP_PASSWORD,
   },
 });
 
 export default async function handler(req, res) {
   try {
-    // Fetch bookings that need reminders (example logic)
-    const upcomingBookings = [
+    // Replace this with a database call to fetch upcoming bookings
+    const bookings = [
       {
         customerName: "John",
         customerEmail: "john@example.com",
@@ -20,10 +20,20 @@ export default async function handler(req, res) {
       },
     ];
 
-    // Send reminder emails
+    // Get the current time
+    const now = new Date();
+
+    // Filter bookings for reminders within the next 15 minutes
+    const upcomingBookings = bookings.filter((booking) => {
+      const reservedTime = new Date(booking.reservedAt);
+      const timeDifference = reservedTime - now;
+      return timeDifference > 0 && timeDifference <= 15 * 60 * 1000; // Within 15 minutes
+    });
+
+    // Send reminder emails for filtered bookings
     for (const booking of upcomingBookings) {
       const mailOptions = {
-        from: process.env.GMAIL_USER,
+        from: process.env.YAHOO_USER,
         to: booking.customerEmail,
         subject: "Booking Reminder",
         text: `Hello ${booking.customerName},\n\nThis is a reminder that your booking for table ${booking.tableName} is at ${booking.reservedAt}.\n\nThank you!`,
@@ -38,3 +48,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Failed to send reminders." });
   }
 }
+

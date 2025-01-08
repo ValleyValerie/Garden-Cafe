@@ -167,9 +167,9 @@ selectedTable: null,
     return {
       top: `${table.y}px`,
       left: `${table.x}px`,
-      width: table.shape === "circle" ? "50px" : "80px`,
-      height: "50px`,
-      borderRadius: table.shape === "circle" ? "50%" : "8px`,
+      width: table.shape === "circle" ? "50px" : "80px",
+      height: "50px",
+      borderRadius: table.shape === "circle" ? "50%" : "8px",
     };
   },
   getTableClass(status) {
