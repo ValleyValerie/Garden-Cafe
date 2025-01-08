@@ -1,4 +1,5 @@
 # Garden-Cafe
+<<<<<<< HEAD
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -55,3 +56,6 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+=======
+A cafe website with a menu and a table booking system
+>>>>>>> 02f572dfa429f981167ad45d1998ec56178950ba
