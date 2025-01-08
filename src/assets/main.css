@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #ffffff;
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: normal;
+  
+}
+
+.h1, .h2, .h3, .h4 {
+  font-weight: bold;
+  font-style: normal;
+
+}
+
+/* Desktop View */
+h1 {
+  font-size: 56px; /* 3.5rem */
+}
+h2 {
+  font-size: 40px; /* 2.5rem */
+}
+h3 {
+  font-size: 32px; /* 2rem */
+}
+h4 {
+  font-size: 24px; /* 1.5rem */
+}
+p {
+  font-size: 16px; /* 1rem */
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 40px; /* 2.5rem */
+  }
+  h2 {
+    font-size: 32px; /* 2rem */
+  }
+  h3 {
+    font-size: 24px; /* 1.5rem */
+  }
+  h4 {
+    font-size: 20px; /* 1.25rem */
+  }
+  p {
+    font-size: 14px; /* 0.875rem */
+  }
+}
+
+.text-with-shadow {
+   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.text-with-shadow-2 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.599);
+}
+
+.text-with-shadow-3 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.722);
+}
+
+.text-with-light {
+  text-shadow: 2px 2px 5px rgb(255, 255, 255);
+}
+
+/*@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+ 
+}*/
