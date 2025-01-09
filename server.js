@@ -1,13 +1,15 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import bookTable from './api/book-table.js';
-
+import cors from 'cors'; // Import cors
 
 dotenv.config();  // Load environment variables
 
 const app = express();
-const port = 3001;
+const port = 3000;
+
+// Apply the cors middleware after app initialization
+app.use(cors()); // This will allow all domains to make requests
 
 // Parse JSON request body
 app.use(express.json());
@@ -27,8 +29,13 @@ const transporter = nodemailer.createTransport({
 });
 
 // POST route to send confirmation email
-app.post('/api/book-table', bookTable, async (req, res) => {
+app.post('/api/book-table', (req, res) => {
   const { tableName, reservedAt, customerName, customerSurname, customerEmail } = req.body;
+
+  // Check for missing fields
+  if (!tableName || !reservedAt || !customerName || !customerSurname || !customerEmail) {
+    return res.status(400).send('All fields are required.');
+  }
 
   const mailOptions = {
     from: process.env.YAHOO_USER,
@@ -37,16 +44,14 @@ app.post('/api/book-table', bookTable, async (req, res) => {
     text: `Hello ${customerName} ${customerSurname},\n\nYour table (${tableName}) has been reserved for ${reservedAt}.\n\nThank you!`,
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Booking confirmed and confirmation email sent.' });
-  } catch (error) {
-    console.error('Error sending confirmation email:', error);
-    res.status(500).json({ message: 'Failed to send confirmation email.' });
-  }
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send('Error sending confirmation email.');
+    }
+    res.status(200).send('Booking confirmed and confirmation email sent.');
+  });
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
-
