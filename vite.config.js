@@ -12,7 +12,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    outDir: 'dist',
+    base: '/', // Ensure assets are loaded correctly when served
+  },
 })
+

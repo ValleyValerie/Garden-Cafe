@@ -30,7 +30,7 @@ const isScrolled = ref(false);
           <RouterLink to="/about" class="nav-link">About Us</RouterLink>
           <RouterLink to="/menu" class="nav-link">Menu</RouterLink>
           <RouterLink to="/faq" class="nav-link">FAQ</RouterLink>
-          <RouterLink to="/bookatable" class="nav-link rounded-full border-2 border-[#2e3f15]">Book a Table</RouterLink>
+          <RouterLink to="/bookatable" class="nav-link rounded-xl border-2 border-[#2e3f15]">Book a Table</RouterLink>
         </nav>
         <button :class="{'menu-open-btn': menuOpen}" class="menu-button" @click="toggleMenu">☰</button>
       </div>
@@ -38,7 +38,7 @@ const isScrolled = ref(false);
         <RouterLink to="/about" class="nav-link-mobile ml-2 rounded-full" @click="toggleMenu">About Us</RouterLink>
         <RouterLink to="/menu" class="nav-link-mobile ml-2 rounded-full" @click="toggleMenu">Menu</RouterLink>
         <RouterLink to="/faq" class="nav-link-mobile ml-2 rounded-full" @click="toggleMenu">FAQ</RouterLink>
-        <RouterLink to="/bookatable" class="nav-link-mobile ml-2 rounded-full border-2 border-[#2e3f15]" @click="toggleMenu">Book a Table</RouterLink>
+        <RouterLink to="/bookatable" class="nav-link-mobile ml-2 rounded-xl border-2 border-[#2e3f15]" @click="toggleMenu">Book a Table</RouterLink>
       </div>
     </header>
 
@@ -296,7 +296,7 @@ Food city, KL 3471
   }
 
   .nav-link {
-    padding: 14px;
+    padding: 10px;
     text-decoration: none;
     color: inherit;
     text-align: center;
@@ -304,7 +304,7 @@ Food city, KL 3471
 
   .nav-link:hover {
     background-color: #f4f4f486;
-    border-radius: 9999px;
+    border-radius: 0.75rem;
   }
 
   .nav-link-mobile {
