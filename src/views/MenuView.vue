@@ -14,7 +14,7 @@ import Soups from '@/assets/images/Soup.jpeg';
 import Croissant from '@/assets/images/Croissants.jpeg';
 import Spanakopita from '@/assets/images/Spanakopita.jpeg';
 import lemon from '@/assets/images/lemon.jpeg';
-import coffee from '@/assets/images/coffee.jpeg';
+import coffee from '@/assets/images/Coffee.jpeg';
 import tea from '@/assets/images/tea.jpeg';
 import TSmoothies from '@/assets/images/TSmoothie.jpeg';
 import side from '@/assets/images/Sides.jpeg';
