@@ -3,14 +3,13 @@
     "builds": [
       {
         "src": "index.html",
-        "use": "@vercel/static"
+        "use": "@vercel/static",
+          "command": "npm run build",
+    "outputDirectory": "dist"
       }
     ],
-    "routes": [
-      { "src": "/.*", "dest": "index.html" }
-    ],
-    "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+   "rewrites": [
+    { "source": "/old-path", "destination": "/new-path" }
   ]
   }
   
