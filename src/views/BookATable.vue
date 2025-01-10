@@ -339,7 +339,7 @@ export default {
 
 <style>
 body {
-  @apply bg-gray-100;
+  --tw-bg-opacity: 1; background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1)) /* #f3f4f6 */;
 }
 
 

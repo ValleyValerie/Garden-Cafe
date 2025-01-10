@@ -30,6 +30,11 @@ const router = createRouter({
       name: 'bookATable',
       component: () => import('../views/BookATable.vue'),
     },
+    {
+      path: '/:catchAll(.*)', // Matches any route not explicitly defined
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'), // Create this component
+    },
   ],
 })
 
