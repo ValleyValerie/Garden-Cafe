@@ -1,15 +1,8 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "index.html",
-        "use": "@vercel/static",
-          "command": "npm run build",
-    "outputDirectory": "dist"
-      }
-    ],
-   "rewrites": [
-    { "source": "/old-path", "destination": "/new-path" }
-  ]
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
+    ]
   }
+  
   
