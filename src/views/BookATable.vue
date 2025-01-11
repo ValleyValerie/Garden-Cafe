@@ -1,6 +1,9 @@
 <script setup>
 
 import Booking from '@/assets/images/BookTable.jpg';
+import emailjs from '@emailjs/browser';
+
+
 
 </script>
 
@@ -96,18 +99,22 @@ import Booking from '@/assets/images/BookTable.jpg';
       <div>
         <label class="block">Date:</label>
         <input
-          type="date"
-          v-model="bookingDate"
-          :class="['w-full px-3 py-2 border rounded-lg', missingFields.includes('date') ? 'border-red-500' : 'border-gray-300']"
-        />
+    type="date"
+    v-model="bookingDate"
+    :min="getCurrentDate()"
+    :class="['w-full px-3 py-2 border rounded-lg', missingFields.includes('date') ? 'border-red-500' : 'border-gray-300']"
+  />
       </div>
       <div>
         <label class="block">Time:</label>
         <input
-          type="time"
-          v-model="bookingTime"
-          :class="['w-full px-3 py-2 border rounded-lg', missingFields.includes('time') ? 'border-red-500' : 'border-gray-300']"
-        />
+    type="time"
+    v-model="bookingTime"
+    min="08:00"
+    max="17:00"
+    step="1800"
+    :class="['w-full px-3 py-2 border rounded-lg', missingFields.includes('time') ? 'border-red-500' : 'border-gray-300']"
+  />
       </div>
       <div>
         <label class="block">Name:</label>
@@ -151,16 +158,18 @@ import Booking from '@/assets/images/BookTable.jpg';
 
     <!-- Confirmation Popup -->
     <div v-if="isConfirmationPopupVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-      <div class="bg-white p-6 rounded-lg w-96 text-center">
-        <h3 class="text-xl font-bold mb-4">Reservation Confirmed!</h3>
-        <p class="text-lg">Table {{ selectedTable.name }} has been reserved. Check your email for confirmation. {{ selectedTable.reservedAt }}.</p>
-        <button @click="closeConfirmationPopup" class="mt-4 px-4 py-2 bg-[#2e3f15] text-white rounded-lg">
-          Close
-        </button>
+    <div class="bg-white p-6 rounded-lg w-96 text-center">
+      <h3 class="text-xl font-bold mb-4">Reservation Confirmed!</h3>
+      <div class="text-left text-black space-y-2">
+
+        <p class="mt-4 text-sm text-center text-gray-600">A confirmation email will be sent to your email address.</p>
       </div>
+      <button @click="closeConfirmationPopup" class="mt-6 px-4 py-2 bg-[#2e3f15] text-white rounded-lg">
+        Close
+      </button>
     </div>
   </div>
-
+  </div>
 </template>
 
 <script>
@@ -194,9 +203,86 @@ export default {
       isConfirmationPopupVisible: false,
       missingFields: [],
       errorMessage: '',
+      emailjs_service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      emailjs_template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      emailjs_template_id_2: import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID,
+      emailjs_public_key: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      admin_email: import.meta.env.VITE_ADMIN_EMAIL,
     };
   },
   methods: {
+    formatDate(date) {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    },
+
+    formatTime(time) {
+      if (!time) return '';
+      return new Date(`2000-01-01T${time}`).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    },
+
+    async sendConfirmationEmail() {
+      try {
+        const customerTemplateParams = {
+      to_email: this.customerEmail,
+      to_name: `${this.customerName} ${this.customerSurname}`,
+      table_number: this.selectedTable.name,
+      booking_date: this.formatDate(this.bookingDate),
+      booking_time: this.formatTime(this.bookingTime),
+      seats: this.selectedTable.seats,
+    };
+
+
+     // Send email to admin
+     const adminTemplateParams = {
+        to_email: this.admin_email,
+        to_name: 'Admin',
+        table_number: this.selectedTable.name,
+        booking_date: this.formatDate(this.bookingDate),
+        booking_time: this.formatTime(this.bookingTime),
+        seats: this.selectedTable.seats,
+        customer_email: this.customerEmail,
+        customer_name: `${this.customerName} ${this.customerSurname}`
+      };
+
+   // Send email to customer
+   await emailjs.send(
+      this.emailjs_service_id,
+      this.emailjs_template_id,
+      customerTemplateParams,
+      this.emailjs_public_key
+    );
+
+    // Send email to admin
+    await emailjs.send(
+      this.emailjs_service_id,
+      this.emailjs_template_id_2,
+      adminTemplateParams,
+      this.emailjs_public_key
+    );
+
+        console.log('Confirmation emails sent successfully');
+      } catch (error) {
+        console.error('Failed to send email:', error);
+        this.errorMessage = 'Failed to send confirmation email. Please save your booking details.';
+      }
+    },
+    getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
     async validateAndConfirmBooking() {
   // Validate fields
   if (!this.bookingDate || !this.bookingTime || !this.customerName || !this.customerSurname || !this.customerEmail) {
@@ -220,57 +306,66 @@ export default {
 
   // Validate booking date and time
   const selectedDate = new Date(this.bookingDate);
-  const selectedTime = this.bookingTime.split(':');
-  const selectedHour = parseInt(selectedTime[0], 10);
-  const selectedMinute = parseInt(selectedTime[1], 10);
+  const currentDate = new Date();
+
+   // Reset hours to compare just the dates
+   currentDate.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  // Check if date is in the past
+  if (selectedDate < currentDate) {
+    this.errorMessage = "Please select a future date.";
+    return;
+  }
 
   // Check if the selected date is a weekday (Monday to Friday)
   const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   if (dayOfWeek === 0 || dayOfWeek === 6) {
-    this.errorMessage = "Bookings are only available from Monday to Friday.";
+    this.errorMessage = "We are only open Monday to Friday. Please select a weekday.";
     return;
   }
 
-  // Check if the selected time is within operating hours (08:00 to 17:00)
-  if (
-    selectedHour < 8 ||
-    (selectedHour === 17 && selectedMinute > 0) ||
-    selectedHour >= 17
-  ) {
-    this.errorMessage = "Bookings are only available between 08:00 and 17:00.";
+
+
+  // Parse selected time
+  const selectedTime = this.bookingTime.split(':');
+  const selectedHour = parseInt(selectedTime[0], 10);
+  const selectedMinute = parseInt(selectedTime[1], 10);
+
+  // For same-day bookings, check if the time hasn't passed
+  if (selectedDate.getTime() === currentDate.getTime()) {
+    const currentHour = new Date().getHours();
+    const currentMinute = new Date().getMinutes();
+
+    if (selectedHour < currentHour || (selectedHour === currentHour && selectedMinute <= currentMinute)) {
+      this.errorMessage = "Please select a future time for today's booking.";
+      return;
+    }
+  }
+
+
+    // Check if the selected time is within operating hours (08:00 to 17:00)
+    if (selectedHour < 8 || selectedHour > 17 || (selectedHour === 17 && selectedMinute > 0)) {
+    this.errorMessage = "Our operating hours are 08:00 to 17:00. Please select a time within these hours.";
     return;
   }
 
       // Send data to Formspree
-  try {
-    const response = await fetch("https://formspree.io/f/mannaypw", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: this.customerEmail, // User's email
-        name: this.customerName,
-        date: this.bookingDate,
-        time: this.bookingTime,
-        message: `Hi ${this.customerName}, your booking for ${this.bookingDate} at ${this.bookingTime} has been confirmed.`,
-        _replyto: this.customerEmail, // Send confirmation to the user
-        _cc: "admin@gardencafe.online", // Send a copy to yourself
-      }),
-    });
+      try {
+        // Send confirmation email
+        await this.sendConfirmationEmail();
 
-    if (response.ok) {
-      alert("Booking confirmed! Check your email for confirmation.");
-      this.closeBookingModal();
-      this.confirmBooking(); // Update table status
-    } else {
-      alert("Failed to confirm booking. Please try again.");
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("An error occurred. Please try again.");
-  }
-},
+        // Update table status
+        this.confirmBooking();
+
+        // Close modal and show confirmation
+        this.closeBookingModal();
+        this.isConfirmationPopupVisible = true;
+      } catch (error) {
+        console.error("Error:", error);
+        this.errorMessage = "An error occurred while processing your booking. Please try again.";
+      }
+    },
     validateEmail() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(this.customerEmail)) {

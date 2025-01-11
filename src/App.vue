@@ -136,13 +136,13 @@ const isScrolled = ref(false);
           Menu
         </h6>
         <p class="mb-4">
-          <a href="#!">About us</a>
+          <a href="/about">About us</a>
         </p>
         <p class="mb-4">
-          <a href="#!">Menu</a>
+          <a href="/menu">Menu</a>
         </p>
         <p class="mb-4">
-          <a href="#!">FAQ</a>
+          <a href="/faq">FAQ</a>
         </p>
         <p>
           <a href="#!">Book a Table</a>
@@ -219,9 +219,9 @@ Food city, KL 3471
 
   <!--Copyright section-->
   <div class="bg-black/5 p-6 text-center">
-    <span>© 2024 Copyright:</span>
+    <span>© 2025 Copyright:</span>
     <a class="font-semibold" href="https://tw-elements.com/"
-      > GardenCafe</a
+      > GardenCafe. with ❤️ Bonolo</a
     >
   </div>
 </footer>

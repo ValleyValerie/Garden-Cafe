@@ -18,7 +18,15 @@ export default defineConfig({
   build: {
     outDir: 'dist', // Ensure the build output goes to the 'dist' directory
     base: '/', // Adjust this if you're using a subdirectory for deployment (e.g., '/garden-cafe/')
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+      }
+    }
   },
+
 });
 
 

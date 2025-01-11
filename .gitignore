@@ -13,6 +13,7 @@ dist
 dist-ssr
 coverage
 *.local
+.vercel
 
 /cypress/videos/
 /cypress/screenshots/
@@ -31,4 +32,6 @@ coverage
 
 
 
-.vercel
+# Environment variables
+.env
+.env.local
